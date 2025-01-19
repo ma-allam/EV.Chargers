@@ -11,7 +11,7 @@ namespace EV.Chargers.Core.Auth.User
         public string EmailAddress { get; set; } = "";
         public List<string> Permissions { get; set; } = new List<string>();
 
-        public int ClientId { get; set; }
+        public long UserId { get; set; }
         public string Language { get; set; } = "en";
         public Guid ActiveContextId { get; set; } = Guid.Empty;
         public JsonWebToken Token { get; set; } = new JsonWebToken();

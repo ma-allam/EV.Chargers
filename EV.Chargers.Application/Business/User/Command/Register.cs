@@ -62,16 +62,15 @@ namespace EV.Chargers.Application.Business.User.Command
                         throw new Exception("User creation failed: " + string.Join(", ", result.Errors.Select(e => e.Description)));
                     }
 
-                    var client = new Client
+                    var userData = new UserData
                     {
-                        Name = user.UserName,
+                        UserName = user.UserName,
                         Email = user.Email,
-                        ClientType = 1,
-                        CountryId = 1,
+                        
                         UserId = user.Id
                     };
 
-                    _databaseService.Client.Add(client);
+                    _databaseService.UserData.Add(userData);
                     await _databaseService.DBSaveChangesAsync(cancellationToken);
 
                     await transaction.CommitAsync(cancellationToken);
@@ -79,7 +78,7 @@ namespace EV.Chargers.Application.Business.User.Command
                     // Optionally, sign in the user after registration
                     await _signInManager.SignInAsync(user, isPersistent: false);
 
-                    ActiveContext activeContext = new ActiveContext { UserName = user.UserName, ClientId = client.Id, EmailAddress = user.Email, FullName = client.Name };
+                    ActiveContext activeContext = new ActiveContext { UserName = user.UserName, UserId = userData.Id, EmailAddress = user.Email, FullName = userData.UserName };
                     var token = _jwtHandler.CreateWithRefreshToken(activeContext);
 
                     //var token = await GenerateJwtToken(user);

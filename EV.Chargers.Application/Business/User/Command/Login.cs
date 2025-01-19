@@ -52,9 +52,9 @@ namespace EV.Chargers.Application.Business.User.Command
 
             if (result.Succeeded)
             {
-                var client = await _databaseService.Client.Where(o => o.UserId == user.Id).FirstOrDefaultAsync();
+                var userData = await _databaseService.UserData.Where(o => o.UserId == user.Id).FirstOrDefaultAsync();
 
-                ActiveContext activeContext = new ActiveContext { UserName = user.UserName, ClientId = client.Id, EmailAddress = user.Email, FullName = client.Name };
+                ActiveContext activeContext = new ActiveContext { UserName = user.UserName, UserId = userData.Id, EmailAddress = user.Email, FullName = userData.UserName };
                 var token = _jwtHandler.CreateWithRefreshToken(activeContext);
 
                 //var token = await GenerateJwtToken(user);
@@ -88,8 +88,8 @@ namespace EV.Chargers.Application.Business.User.Command
 
         public async Task<string> GenerateJwtToken(ApplicationUser user)
         {
-            var clientid = await _databaseService.Client.Where(o => o.UserId == user.Id).Select(o => o.Id).FirstOrDefaultAsync();
-            ActiveContext activeContext = new ActiveContext { UserName = user.UserName, ClientId = clientid };
+            var userDataId = await _databaseService.UserData.Where(o => o.UserId == user.Id).Select(o => o.Id).FirstOrDefaultAsync();
+            ActiveContext activeContext = new ActiveContext { UserName = user.UserName, UserId = userDataId };
             var data = JsonConvert.SerializeObject(activeContext, Formatting.None,
                              new JsonSerializerSettings()
                              {
