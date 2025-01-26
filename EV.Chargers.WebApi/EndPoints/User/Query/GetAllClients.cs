@@ -28,7 +28,7 @@ namespace EV.Chargers.WebApi.EndPoints.User.Query
         [Authorize(Roles = "Admin")]
         [ApiVersion("0.0")]
         [HttpGet(GetAllClientsEndPointRequest.Route)]
-        [SwaggerOperation(Summary = "GetAllClients", Description = "GetAllClients ", OperationId = "EV.Chargers.WebApi.EndPoints.User.Query.GetAllClients", Tags = new[] { "EV.Chargers.WebApi.EndPoints.User.Query" })]
+        [SwaggerOperation(Summary = "GetAllClients", Description = "GetAllClients ", OperationId = "EV.Chargers.WebApi.EndPoints.User.Query.GetAllClients", Tags = new[] { "EV.Chargers.WebApi.EndPoints.User" })]
         [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(GetAllClientsEndPointResponse))]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, Type = typeof(ExceptionOutput))]
         public override async Task<ActionResult<GetAllClientsEndPointResponse>> HandleAsync([FromQuery]GetAllClientsEndPointRequest request, CancellationToken cancellationToken = default)

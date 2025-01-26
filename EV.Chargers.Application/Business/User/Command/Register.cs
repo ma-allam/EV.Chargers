@@ -53,6 +53,7 @@ namespace EV.Chargers.Application.Business.User.Command
                     {
                         UserName = request.Username,
                         Email = request.Email,
+                        PhoneNumber = request.PhoneNumber,
                     };
 
                     var result = await _userManager.CreateAsync(user, request.Password);
@@ -64,10 +65,12 @@ namespace EV.Chargers.Application.Business.User.Command
 
                     var userData = new UserData
                     {
-                        UserName = user.UserName,
+                        FirebaseId = user.UserName,
+                        UserName = request.FullName,
                         Email = user.Email,
-                        
-                        UserId = user.Id
+                        Phone = user.PhoneNumber,
+                        UserId = user.Id,
+                        FirebaseToken = request.FireBaseToken
                     };
 
                     _databaseService.UserData.Add(userData);
@@ -78,7 +81,7 @@ namespace EV.Chargers.Application.Business.User.Command
                     // Optionally, sign in the user after registration
                     await _signInManager.SignInAsync(user, isPersistent: false);
 
-                    ActiveContext activeContext = new ActiveContext { UserName = user.UserName, UserId = userData.Id, EmailAddress = user.Email, FullName = userData.UserName };
+                    ActiveContext activeContext = new ActiveContext { UserId = userData.Id, UserName = userData.FirebaseId, EmailAddress = user.Email, PhoneNumber = userData.Phone, FullName = userData.UserName, FireBaseToken = request.FireBaseToken };
                     var token = _jwtHandler.CreateWithRefreshToken(activeContext);
 
                     //var token = await GenerateJwtToken(user);

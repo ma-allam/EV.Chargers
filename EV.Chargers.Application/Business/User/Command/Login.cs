@@ -53,8 +53,10 @@ namespace EV.Chargers.Application.Business.User.Command
             if (result.Succeeded)
             {
                 var userData = await _databaseService.UserData.Where(o => o.UserId == user.Id).FirstOrDefaultAsync();
-
-                ActiveContext activeContext = new ActiveContext { UserName = user.UserName, UserId = userData.Id, EmailAddress = user.Email, FullName = userData.UserName };
+                userData.FirebaseToken=request.FireBaseToken;
+                _databaseService.UserData.Update(userData);
+                await _databaseService.DBSaveChangesAsync();
+                ActiveContext activeContext = new ActiveContext { UserId = userData.Id, UserName = userData.FirebaseId,  EmailAddress = user.Email,PhoneNumber=userData.Phone, FullName = userData.UserName,FireBaseToken=request.FireBaseToken };
                 activeContext.Permissions.AddRange( roles);
                 var token = _jwtHandler.CreateWithRefreshToken(activeContext);
 

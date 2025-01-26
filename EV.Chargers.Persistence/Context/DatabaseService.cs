@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using EV.Chargers.Application.Contract;
+using EV.Chargers.Core.AppSetting;
 using EV.Chargers.Core.Cache;
 using EV.Chargers.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -55,7 +56,7 @@ public partial class DatabaseService : IdentityDbContext<ApplicationUser>, IData
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Server=172.16.30.42;Database=EVChargers;Username=postgres;Password=W0rldE@ter", x => x.UseNetTopologySuite());
+        => optionsBuilder.UseNpgsql(SettingsDependancyInjection.PosSettings.ConnectionString!, x => x.UseNetTopologySuite());
 
     //protected override void OnModelCreating(ModelBuilder modelBuilder)
     //{
