@@ -53,6 +53,7 @@ namespace EV.Chargers.Application.Business.User.Command
                     {
                         UserName = request.Username,
                         Email = request.Email,
+                        PhoneNumber = request.PhoneNumber,
                     };
 
                     var result = await _userManager.CreateAsync(user, request.Password);
@@ -62,16 +63,17 @@ namespace EV.Chargers.Application.Business.User.Command
                         throw new Exception("User creation failed: " + string.Join(", ", result.Errors.Select(e => e.Description)));
                     }
 
-                    var client = new Client
+                    var userData = new UserData
                     {
-                        Name = user.UserName,
+                        FirebaseId = user.UserName,
+                        UserName = request.FullName,
                         Email = user.Email,
-                        ClientType = 1,
-                        CountryId = 1,
-                        UserId = user.Id
+                        Phone = user.PhoneNumber,
+                        UserId = user.Id,
+                        FirebaseToken = request.FireBaseToken
                     };
 
-                    _databaseService.Client.Add(client);
+                    _databaseService.UserData.Add(userData);
                     await _databaseService.DBSaveChangesAsync(cancellationToken);
 
                     await transaction.CommitAsync(cancellationToken);
@@ -79,7 +81,7 @@ namespace EV.Chargers.Application.Business.User.Command
                     // Optionally, sign in the user after registration
                     await _signInManager.SignInAsync(user, isPersistent: false);
 
-                    ActiveContext activeContext = new ActiveContext { UserName = user.UserName, ClientId = client.Id, EmailAddress = user.Email, FullName = client.Name };
+                    ActiveContext activeContext = new ActiveContext { UserId = userData.Id, UserName = userData.FirebaseId, EmailAddress = user.Email, PhoneNumber = userData.Phone, FullName = userData.UserName, FireBaseToken = request.FireBaseToken };
                     var token = _jwtHandler.CreateWithRefreshToken(activeContext);
 
                     //var token = await GenerateJwtToken(user);

@@ -18,11 +18,350 @@ namespace EV.Chargers.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.5")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.Charger", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<short?>("ChargerTypeId")
+                        .HasColumnType("smallint")
+                        .HasColumnName("charger_type_id");
+
+                    b.Property<long?>("StationId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("station_id");
+
+                    b.Property<short?>("StatusId")
+                        .HasColumnType("smallint")
+                        .HasColumnName("status_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChargerTypeId");
+
+                    b.HasIndex("StationId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("charger");
+                });
+
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.ChargerReservation", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long?>("ChargerId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("charger_id");
+
+                    b.Property<DateTime?>("EndTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("end_time");
+
+                    b.Property<DateTime?>("StartTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("start_time");
+
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChargerId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("charger_reservation");
+                });
+
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.ChargerStatus", b =>
+                {
+                    b.Property<short>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<short>("Id"));
+
+                    b.Property<string>("Status")
+                        .HasColumnType("text")
+                        .HasColumnName("status");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("charger_status");
+                });
+
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.ChargerType", b =>
+                {
+                    b.Property<short>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<short>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("charger_type");
+                });
+
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.Station", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Address")
+                        .HasColumnType("text")
+                        .HasColumnName("address");
+
+                    b.Property<string>("ContactNumber")
+                        .HasColumnType("text")
+                        .HasColumnName("contact_number");
+
+                    b.Property<Geometry>("Location")
+                        .HasColumnType("geometry")
+                        .HasColumnName("location");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<short?>("StatusId")
+                        .HasColumnType("smallint")
+                        .HasColumnName("status_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("station");
+                });
+
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.StationStatus", b =>
+                {
+                    b.Property<short>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<short>("Id"));
+
+                    b.Property<string>("Status")
+                        .HasColumnType("text")
+                        .HasColumnName("status");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("station_status");
+                });
+
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.SysParam", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ParamName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("ParamValue")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SysParam");
+                });
+
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.TransactionType", b =>
+                {
+                    b.Property<short>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<short>("Id"));
+
+                    b.Property<string>("Type")
+                        .HasColumnType("text")
+                        .HasColumnName("type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("transaction_type");
+                });
+
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.UserData", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Email")
+                        .HasColumnType("text")
+                        .HasColumnName("email");
+
+                    b.Property<string>("FirebaseId")
+                        .HasColumnType("text")
+                        .HasColumnName("firebase_id");
+
+                    b.Property<string>("FirebaseToken")
+                        .HasColumnType("text")
+                        .HasColumnName("firebase_token");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("text")
+                        .HasColumnName("phone");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("user_id");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("text")
+                        .HasColumnName("user_name");
+
+                    b.Property<double?>("WalletBalance")
+                        .HasColumnType("double precision")
+                        .HasColumnName("wallet_balance");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("user_data");
+                });
+
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.WalletTransactionHistory", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<double?>("Amount")
+                        .HasColumnType("double precision")
+                        .HasColumnName("amount");
+
+                    b.Property<double?>("BalanceAfter")
+                        .HasColumnType("double precision")
+                        .HasColumnName("balance_after");
+
+                    b.Property<short?>("TransactionTypeId")
+                        .HasColumnType("smallint")
+                        .HasColumnName("transaction_type_id");
+
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TransactionTypeId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("wallet_transaction_history");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -156,1001 +495,75 @@ namespace EV.Chargers.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ApplicationUser", b =>
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.Charger", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.HasOne("EV.Chargers.Domain.Entities.ChargerType", "ChargerType")
+                        .WithMany("Charger")
+                        .HasForeignKey("ChargerTypeId");
 
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("integer");
+                    b.HasOne("EV.Chargers.Domain.Entities.Station", "Station")
+                        .WithMany("Charger")
+                        .HasForeignKey("StationId");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("text");
+                    b.HasOne("EV.Chargers.Domain.Entities.ChargerStatus", "Status")
+                        .WithMany("Charger")
+                        .HasForeignKey("StatusId");
 
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                    b.Navigation("ChargerType");
 
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("boolean");
+                    b.Navigation("Station");
 
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex");
-
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.Client", b =>
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.ChargerReservation", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
+                    b.HasOne("EV.Chargers.Domain.Entities.Charger", "Charger")
+                        .WithMany("ChargerReservation")
+                        .HasForeignKey("ChargerId");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.HasOne("EV.Chargers.Domain.Entities.UserData", "User")
+                        .WithMany("ChargerReservation")
+                        .HasForeignKey("UserId");
 
-                    b.Property<int>("ClientType")
-                        .HasColumnType("integer")
-                        .HasColumnName("client_type");
+                    b.Navigation("Charger");
 
-                    b.Property<int>("CountryId")
-                        .HasColumnType("integer")
-                        .HasColumnName("country_id");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("text")
-                        .HasColumnName("email");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("text")
-                        .HasColumnName("notes");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text")
-                        .HasColumnName("phone_number");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientType");
-
-                    b.HasIndex("CountryId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("client");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ClientType", b =>
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.Station", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
+                    b.HasOne("EV.Chargers.Domain.Entities.StationStatus", "Status")
+                        .WithMany("Station")
+                        .HasForeignKey("StatusId");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("type");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("client_type");
+                    b.Navigation("Status");
                 });
 
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractAttachments", b =>
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.UserData", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
+                    b.HasOne("EV.Chargers.Domain.Entities.ApplicationUser", "User")
+                        .WithOne("UserData")
+                        .HasForeignKey("EV.Chargers.Domain.Entities.UserData", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<Guid>("AttachmentId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("AttachmentId");
-
-                    b.Property<int?>("ContractId")
-                        .HasColumnType("integer")
-                        .HasColumnName("contract_id");
-
-                    b.Property<string>("FileExtension")
-                        .HasColumnType("text")
-                        .HasColumnName("file_extension");
-
-                    b.Property<string>("FileUrl")
-                        .HasColumnType("text")
-                        .HasColumnName("file_url");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("text")
-                        .HasColumnName("notes");
-
-                    b.Property<string>("Tags")
-                        .HasColumnType("text")
-                        .HasColumnName("Tags");
-
-                    b.Property<DateOnly>("UploadDate")
-                        .HasColumnType("date")
-                        .HasColumnName("UploadDate");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContractId");
-
-                    b.ToTable("contract_attachments");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractDueDates", b =>
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.WalletTransactionHistory", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
+                    b.HasOne("EV.Chargers.Domain.Entities.TransactionType", "TransactionType")
+                        .WithMany("WalletTransactionHistory")
+                        .HasForeignKey("TransactionTypeId");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.HasOne("EV.Chargers.Domain.Entities.UserData", "User")
+                        .WithMany("WalletTransactionHistory")
+                        .HasForeignKey("UserId");
 
-                    b.Property<int>("ContractId")
-                        .HasColumnType("integer")
-                        .HasColumnName("contract_id");
+                    b.Navigation("TransactionType");
 
-                    b.Property<DateOnly>("DueDate")
-                        .HasColumnType("date")
-                        .HasColumnName("due_date");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("text")
-                        .HasColumnName("notes");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContractId");
-
-                    b.ToTable("contract_due_dates");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractImageModes", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ContractId")
-                        .HasColumnType("integer")
-                        .HasColumnName("contract_id");
-
-                    b.Property<double>("CreditFactor")
-                        .HasColumnType("double precision")
-                        .HasColumnName("credit_factor");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContractId");
-
-                    b.ToTable("contract_image_modes");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractImageResolution", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ContractId")
-                        .HasColumnType("integer")
-                        .HasColumnName("contract_id");
-
-                    b.Property<int>("ContractImageTypeId")
-                        .HasColumnType("integer")
-                        .HasColumnName("contract_image_type_id");
-
-                    b.Property<double>("CreditFactor")
-                        .HasColumnType("double precision")
-                        .HasColumnName("credit_factor");
-
-                    b.Property<double>("MinOrderAreaSize")
-                        .HasColumnType("double precision")
-                        .HasColumnName("min_order_area_size");
-
-                    b.Property<int>("ResolutionInCm")
-                        .HasColumnType("integer")
-                        .HasColumnName("resolution_in_cm");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContractId");
-
-                    b.HasIndex("ContractImageTypeId");
-
-                    b.ToTable("contract_image_resolution");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractImageType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("contract_image_type");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractOrderPriority", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ContractId")
-                        .HasColumnType("integer")
-                        .HasColumnName("contract_id");
-
-                    b.Property<double>("CreditFactor")
-                        .HasColumnType("double precision")
-                        .HasColumnName("credit_factor");
-
-                    b.Property<int>("MaxAllowedDays")
-                        .HasColumnType("integer")
-                        .HasColumnName("max_allowed_days");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContractId");
-
-                    b.ToTable("contract_order_priority");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractPaymentInformation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("BankAddress")
-                        .HasColumnType("text")
-                        .HasColumnName("bank_address");
-
-                    b.Property<string>("BankBranch")
-                        .HasColumnType("text")
-                        .HasColumnName("bank_branch");
-
-                    b.Property<string>("BankName")
-                        .HasColumnType("text")
-                        .HasColumnName("bank_name");
-
-                    b.Property<string>("ClientNameInBank")
-                        .HasColumnType("text")
-                        .HasColumnName("client_name_in_bank");
-
-                    b.Property<int>("ContractId")
-                        .HasColumnType("integer")
-                        .HasColumnName("contract_id");
-
-                    b.Property<string>("Iban")
-                        .HasColumnType("text")
-                        .HasColumnName("IBAN");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("text")
-                        .HasColumnName("notes");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContractId");
-
-                    b.ToTable("contract_payment_information");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractPaymentType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("type");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("contract_payment_type");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractPeriods", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("AvailableCredit")
-                        .HasColumnType("double precision")
-                        .HasColumnName("available _credit");
-
-                    b.Property<int>("ContractId")
-                        .HasColumnType("integer")
-                        .HasColumnName("contract_id");
-
-                    b.Property<DateOnly>("EndDate")
-                        .HasColumnType("date")
-                        .HasColumnName("end_date");
-
-                    b.Property<double>("RemainingCredit")
-                        .HasColumnType("double precision")
-                        .HasColumnName("remaining_credit");
-
-                    b.Property<DateOnly>("StartDate")
-                        .HasColumnType("date")
-                        .HasColumnName("start_date");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContractId");
-
-                    b.ToTable("contract_periods");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractServices", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ContractId")
-                        .HasColumnType("integer")
-                        .HasColumnName("contract_id");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("text")
-                        .HasColumnName("notes");
-
-                    b.Property<double>("ServiceCost")
-                        .HasColumnType("double precision")
-                        .HasColumnName("service_cost");
-
-                    b.Property<string>("ServiceName")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("service_name");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContractId");
-
-                    b.ToTable("contract_services");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.Contracts", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("AcceptableCloudPerc")
-                        .HasColumnType("double precision")
-                        .HasColumnName("AcceptableCloudPerc");
-
-                    b.Property<int>("ClientId")
-                        .HasColumnType("integer")
-                        .HasColumnName("client_id");
-
-                    b.Property<string>("ContractNumber")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("contract_number");
-
-                    b.Property<int>("ContractPaymentTypeId")
-                        .HasColumnType("integer")
-                        .HasColumnName("contract_payment_type_id");
-
-                    b.Property<int>("CurrencyId")
-                        .HasColumnType("integer")
-                        .HasColumnName("currency_id");
-
-                    b.Property<bool>("Enabled")
-                        .HasColumnType("boolean")
-                        .HasColumnName("enabled");
-
-                    b.Property<DateOnly>("EndDate")
-                        .HasColumnType("date")
-                        .HasColumnName("end_date");
-
-                    b.Property<double>("MinSquareArea")
-                        .HasColumnType("double precision")
-                        .HasColumnName("MinSquareArea");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("text")
-                        .HasColumnName("notes");
-
-                    b.Property<DateOnly>("StartDate")
-                        .HasColumnType("date")
-                        .HasColumnName("start_date");
-
-                    b.Property<double>("TotalContractCost")
-                        .HasColumnType("double precision")
-                        .HasColumnName("total_contract_cost");
-
-                    b.Property<double>("TotalCredit")
-                        .HasColumnType("double precision")
-                        .HasColumnName("total_credit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("ContractPaymentTypeId");
-
-                    b.HasIndex("CurrencyId");
-
-                    b.ToTable("contracts");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.Country", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<Geometry>("CountryGeometry")
-                        .HasColumnType("geometry")
-                        .HasColumnName("country_geometry");
-
-                    b.Property<string>("CountryName")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("country_name");
-
-                    b.Property<string>("CountryPrefix")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("country_prefix");
-
-                    b.Property<Point>("CountyGeometry")
-                        .HasColumnType("geometry(Point,3857)")
-                        .HasColumnName("county_geometry");
-
-                    b.Property<Point>("Geom")
-                        .HasColumnType("geometry(Point,3857)")
-                        .HasColumnName("geom");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("country");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.Currency", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CurrencyName")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("currency_name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("currency");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.Satellite", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_active");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("satellite");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsOrder", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("ActualConsumedCredit")
-                        .HasColumnType("double precision")
-                        .HasColumnName("actual_consumed_credit");
-
-                    b.Property<int>("ClientId")
-                        .HasColumnType("integer")
-                        .HasColumnName("client_id");
-
-                    b.Property<double>("CompeletedPercentage")
-                        .HasColumnType("double precision")
-                        .HasColumnName("compeleted_percentage");
-
-                    b.Property<int>("ContractId")
-                        .HasColumnType("integer")
-                        .HasColumnName("contract_id");
-
-                    b.Property<int>("ContractImageModeId")
-                        .HasColumnType("integer")
-                        .HasColumnName("contract_image_mode_id");
-
-                    b.Property<int>("ContractImageResolutionId")
-                        .HasColumnType("integer")
-                        .HasColumnName("contract_image_resolution_id");
-
-                    b.Property<int>("ContractOrderPirorityId")
-                        .HasColumnType("integer")
-                        .HasColumnName("contract_order_pirority_id");
-
-                    b.Property<double>("Discount")
-                        .HasColumnType("double precision")
-                        .HasColumnName("discount");
-
-                    b.Property<DateOnly>("DueDate")
-                        .HasColumnType("date")
-                        .HasColumnName("due_date");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("text")
-                        .HasColumnName("notes");
-
-                    b.Property<DateOnly>("OrderDate")
-                        .HasColumnType("date")
-                        .HasColumnName("order_date");
-
-                    b.Property<Geometry>("OrderGeometry")
-                        .IsRequired()
-                        .HasColumnType("geometry")
-                        .HasColumnName("order_geometry");
-
-                    b.Property<int>("OrderStatusId")
-                        .HasColumnType("integer")
-                        .HasColumnName("order_status_id");
-
-                    b.Property<double>("PredictedConsumedCredit")
-                        .HasColumnType("double precision")
-                        .HasColumnName("predicted_consumed_credit");
-
-                    b.Property<double>("ShootingAngle")
-                        .HasColumnType("double precision")
-                        .HasColumnName("shooting_angle");
-
-                    b.Property<double>("TotalOrderAreaInKm")
-                        .HasColumnType("double precision")
-                        .HasColumnName("total_order_area_in_KM");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("ContractId");
-
-                    b.HasIndex("OrderStatusId");
-
-                    b.ToTable("sms_order");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsOrderOpportunities", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Chosen")
-                        .HasColumnType("boolean")
-                        .HasColumnName("chosen");
-
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date")
-                        .HasColumnName("date");
-
-                    b.Property<Geometry>("Geometry")
-                        .IsRequired()
-                        .HasColumnType("geometry")
-                        .HasColumnName("geometry");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("integer")
-                        .HasColumnName("order_id");
-
-                    b.Property<int>("SatId")
-                        .HasColumnType("integer")
-                        .HasColumnName("sat_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("SatId");
-
-                    b.ToTable("sms_order_opportunities");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsOrderRoutes", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ExternalSystemIdentifier")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("external_system_identifier");
-
-                    b.Property<Geometry>("Geometry")
-                        .IsRequired()
-                        .HasColumnType("geometry")
-                        .HasColumnName("geometry");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("integer")
-                        .HasColumnName("order_id");
-
-                    b.Property<int>("SatId")
-                        .HasColumnType("integer")
-                        .HasColumnName("sat_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("SatId");
-
-                    b.ToTable("sms_order_routes");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsOrderServices", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("text")
-                        .HasColumnName("notes");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("integer")
-                        .HasColumnName("order_id");
-
-                    b.Property<int>("ServiceId")
-                        .HasColumnType("integer")
-                        .HasColumnName("service_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("ServiceId");
-
-                    b.ToTable("sms_order_services");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsOrderStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("sms_order_status");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsRouteScenes", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("Cloudness")
-                        .HasColumnType("double precision")
-                        .HasColumnName("cloudness");
-
-                    b.Property<Geometry>("Geometry")
-                        .IsRequired()
-                        .HasColumnType("geometry")
-                        .HasColumnName("geometry");
-
-                    b.Property<string>("QlPath")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("ql_path");
-
-                    b.Property<int>("RouteId")
-                        .HasColumnType("integer")
-                        .HasColumnName("route_id");
-
-                    b.Property<double>("ShootingAngle")
-                        .HasColumnType("double precision")
-                        .HasColumnName("shooting_angle");
-
-                    b.Property<DateOnly>("ShootingDate")
-                        .HasColumnType("date")
-                        .HasColumnName("shooting_date");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RouteId");
-
-                    b.ToTable("sms_route_scenes");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsSceneTargets", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("SceneId")
-                        .HasColumnType("integer")
-                        .HasColumnName("scene_id");
-
-                    b.Property<int>("TargetId")
-                        .HasColumnType("integer")
-                        .HasColumnName("target_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SceneId");
-
-                    b.HasIndex("TargetId");
-
-                    b.ToTable("sms_scene_targets");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsTargetTypeMainCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("sms_target_type_main_category");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsTargetTypeSubCategory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<int>("SmsTargetTypeMainCategoryId")
-                        .HasColumnType("integer")
-                        .HasColumnName("sms_target_type_main_category_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SmsTargetTypeMainCategoryId");
-
-                    b.ToTable("sms_target_type_sub_category");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsTargets", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("code");
-
-                    b.Property<int>("CountryId")
-                        .HasColumnType("integer")
-                        .HasColumnName("country_id");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text")
-                        .HasColumnName("description");
-
-                    b.Property<Geometry>("Geometry")
-                        .IsRequired()
-                        .HasColumnType("geometry")
-                        .HasColumnName("geometry");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<int>("SmsTargetTypeSubCategoryId")
-                        .HasColumnType("integer")
-                        .HasColumnName("sms_target_type_sub_category_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CountryId");
-
-                    b.HasIndex("SmsTargetTypeSubCategoryId");
-
-                    b.ToTable("sms_targets");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SysParam", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ParamName")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("ParamName");
-
-                    b.Property<bool>("ParamValue")
-                        .HasColumnType("boolean")
-                        .HasColumnName("ParamValue");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SysParam");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1204,408 +617,47 @@ namespace EV.Chargers.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.Client", b =>
-                {
-                    b.HasOne("EV.Chargers.Domain.Entities.ClientType", "ClientTypeNavigation")
-                        .WithMany("Client")
-                        .HasForeignKey("ClientType")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EV.Chargers.Domain.Entities.Country", "Country")
-                        .WithMany("Client")
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EV.Chargers.Domain.Entities.ApplicationUser", "User")
-                        .WithOne("Client")
-                        .HasForeignKey("EV.Chargers.Domain.Entities.Client", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ClientTypeNavigation");
-
-                    b.Navigation("Country");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractAttachments", b =>
-                {
-                    b.HasOne("EV.Chargers.Domain.Entities.Contracts", "Contract")
-                        .WithMany("ContractAttachments")
-                        .HasForeignKey("ContractId");
-
-                    b.Navigation("Contract");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractDueDates", b =>
-                {
-                    b.HasOne("EV.Chargers.Domain.Entities.Contracts", "Contract")
-                        .WithMany("ContractDueDates")
-                        .HasForeignKey("ContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Contract");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractImageModes", b =>
-                {
-                    b.HasOne("EV.Chargers.Domain.Entities.Contracts", "Contract")
-                        .WithMany("ContractImageModes")
-                        .HasForeignKey("ContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Contract");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractImageResolution", b =>
-                {
-                    b.HasOne("EV.Chargers.Domain.Entities.Contracts", "Contract")
-                        .WithMany("ContractImageResolution")
-                        .HasForeignKey("ContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EV.Chargers.Domain.Entities.ContractImageType", "ContractImageType")
-                        .WithMany("ContractImageResolution")
-                        .HasForeignKey("ContractImageTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Contract");
-
-                    b.Navigation("ContractImageType");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractOrderPriority", b =>
-                {
-                    b.HasOne("EV.Chargers.Domain.Entities.Contracts", "Contract")
-                        .WithMany("ContractOrderPriority")
-                        .HasForeignKey("ContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Contract");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractPaymentInformation", b =>
-                {
-                    b.HasOne("EV.Chargers.Domain.Entities.Contracts", "Contract")
-                        .WithMany("ContractPaymentInformation")
-                        .HasForeignKey("ContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Contract");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractPeriods", b =>
-                {
-                    b.HasOne("EV.Chargers.Domain.Entities.Contracts", "Contract")
-                        .WithMany("ContractPeriods")
-                        .HasForeignKey("ContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Contract");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractServices", b =>
-                {
-                    b.HasOne("EV.Chargers.Domain.Entities.Contracts", "Contract")
-                        .WithMany("ContractServices")
-                        .HasForeignKey("ContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Contract");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.Contracts", b =>
-                {
-                    b.HasOne("EV.Chargers.Domain.Entities.Client", "Client")
-                        .WithMany("Contracts")
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EV.Chargers.Domain.Entities.ContractPaymentType", "ContractPaymentType")
-                        .WithMany("Contracts")
-                        .HasForeignKey("ContractPaymentTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EV.Chargers.Domain.Entities.Currency", "Currency")
-                        .WithMany("Contracts")
-                        .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Client");
-
-                    b.Navigation("ContractPaymentType");
-
-                    b.Navigation("Currency");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsOrder", b =>
-                {
-                    b.HasOne("EV.Chargers.Domain.Entities.Client", "Client")
-                        .WithMany("SmsOrder")
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EV.Chargers.Domain.Entities.Contracts", "Contract")
-                        .WithMany("SmsOrder")
-                        .HasForeignKey("ContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EV.Chargers.Domain.Entities.SmsOrderStatus", "OrderStatus")
-                        .WithMany("SmsOrder")
-                        .HasForeignKey("OrderStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Client");
-
-                    b.Navigation("Contract");
-
-                    b.Navigation("OrderStatus");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsOrderOpportunities", b =>
-                {
-                    b.HasOne("EV.Chargers.Domain.Entities.SmsOrder", "Order")
-                        .WithMany("SmsOrderOpportunities")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EV.Chargers.Domain.Entities.Satellite", "Sat")
-                        .WithMany("SmsOrderOpportunities")
-                        .HasForeignKey("SatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Sat");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsOrderRoutes", b =>
-                {
-                    b.HasOne("EV.Chargers.Domain.Entities.SmsOrder", "Order")
-                        .WithMany("SmsOrderRoutes")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EV.Chargers.Domain.Entities.Satellite", "Sat")
-                        .WithMany("SmsOrderRoutes")
-                        .HasForeignKey("SatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Sat");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsOrderServices", b =>
-                {
-                    b.HasOne("EV.Chargers.Domain.Entities.SmsOrder", "Order")
-                        .WithMany("SmsOrderServices")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EV.Chargers.Domain.Entities.ContractServices", "Service")
-                        .WithMany("SmsOrderServices")
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Service");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsRouteScenes", b =>
-                {
-                    b.HasOne("EV.Chargers.Domain.Entities.SmsOrderRoutes", "Route")
-                        .WithMany("SmsRouteScenes")
-                        .HasForeignKey("RouteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Route");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsSceneTargets", b =>
-                {
-                    b.HasOne("EV.Chargers.Domain.Entities.SmsRouteScenes", "Scene")
-                        .WithMany("SmsSceneTargets")
-                        .HasForeignKey("SceneId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EV.Chargers.Domain.Entities.SmsTargets", "Target")
-                        .WithMany("SmsSceneTargets")
-                        .HasForeignKey("TargetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Scene");
-
-                    b.Navigation("Target");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsTargetTypeSubCategory", b =>
-                {
-                    b.HasOne("EV.Chargers.Domain.Entities.SmsTargetTypeMainCategory", "SmsTargetTypeMainCategory")
-                        .WithMany("SmsTargetTypeSubCategory")
-                        .HasForeignKey("SmsTargetTypeMainCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SmsTargetTypeMainCategory");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsTargets", b =>
-                {
-                    b.HasOne("EV.Chargers.Domain.Entities.Country", "Country")
-                        .WithMany("SmsTargets")
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EV.Chargers.Domain.Entities.SmsTargetTypeSubCategory", "SmsTargetTypeSubCategory")
-                        .WithMany("SmsTargets")
-                        .HasForeignKey("SmsTargetTypeSubCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Country");
-
-                    b.Navigation("SmsTargetTypeSubCategory");
-                });
-
             modelBuilder.Entity("EV.Chargers.Domain.Entities.ApplicationUser", b =>
                 {
-                    b.Navigation("Client")
+                    b.Navigation("UserData")
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.Client", b =>
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.Charger", b =>
                 {
-                    b.Navigation("Contracts");
-
-                    b.Navigation("SmsOrder");
+                    b.Navigation("ChargerReservation");
                 });
 
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ClientType", b =>
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.ChargerStatus", b =>
                 {
-                    b.Navigation("Client");
+                    b.Navigation("Charger");
                 });
 
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractImageType", b =>
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.ChargerType", b =>
                 {
-                    b.Navigation("ContractImageResolution");
+                    b.Navigation("Charger");
                 });
 
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractPaymentType", b =>
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.Station", b =>
                 {
-                    b.Navigation("Contracts");
+                    b.Navigation("Charger");
                 });
 
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.ContractServices", b =>
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.StationStatus", b =>
                 {
-                    b.Navigation("SmsOrderServices");
+                    b.Navigation("Station");
                 });
 
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.Contracts", b =>
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.TransactionType", b =>
                 {
-                    b.Navigation("ContractAttachments");
-
-                    b.Navigation("ContractDueDates");
-
-                    b.Navigation("ContractImageModes");
-
-                    b.Navigation("ContractImageResolution");
-
-                    b.Navigation("ContractOrderPriority");
-
-                    b.Navigation("ContractPaymentInformation");
-
-                    b.Navigation("ContractPeriods");
-
-                    b.Navigation("ContractServices");
-
-                    b.Navigation("SmsOrder");
+                    b.Navigation("WalletTransactionHistory");
                 });
 
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.Country", b =>
+            modelBuilder.Entity("EV.Chargers.Domain.Entities.UserData", b =>
                 {
-                    b.Navigation("Client");
+                    b.Navigation("ChargerReservation");
 
-                    b.Navigation("SmsTargets");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.Currency", b =>
-                {
-                    b.Navigation("Contracts");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.Satellite", b =>
-                {
-                    b.Navigation("SmsOrderOpportunities");
-
-                    b.Navigation("SmsOrderRoutes");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsOrder", b =>
-                {
-                    b.Navigation("SmsOrderOpportunities");
-
-                    b.Navigation("SmsOrderRoutes");
-
-                    b.Navigation("SmsOrderServices");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsOrderRoutes", b =>
-                {
-                    b.Navigation("SmsRouteScenes");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsOrderStatus", b =>
-                {
-                    b.Navigation("SmsOrder");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsRouteScenes", b =>
-                {
-                    b.Navigation("SmsSceneTargets");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsTargetTypeMainCategory", b =>
-                {
-                    b.Navigation("SmsTargetTypeSubCategory");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsTargetTypeSubCategory", b =>
-                {
-                    b.Navigation("SmsTargets");
-                });
-
-            modelBuilder.Entity("EV.Chargers.Domain.Entities.SmsTargets", b =>
-                {
-                    b.Navigation("SmsSceneTargets");
+                    b.Navigation("WalletTransactionHistory");
                 });
 #pragma warning restore 612, 618
         }

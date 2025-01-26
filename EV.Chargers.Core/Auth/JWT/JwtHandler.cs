@@ -220,7 +220,7 @@ namespace EV.Chargers.Core.Auth.JWT
                 Expires = exp.Ticks
             };
 
-            activeContext!.Token = responseToken;
+            //activeContext!.Token = responseToken;
             output.AccessToken = responseToken;
             output.RefreshToken = CreateRefreshToken(activeContext);
             return output;
